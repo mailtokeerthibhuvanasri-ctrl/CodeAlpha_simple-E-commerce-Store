@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% block title %}{{ active_category or 'Shop All' }} — Norwick & Co.{% endblock %}
+{% block content %}
+<section class="wrap shop-head">
+  <div>
+    <span class="eyebrow">{{ 'Search results' if q else 'Catalog' }}</span>
+    <h1>{{ active_category if active_category else ('Results for “' ~ q ~ '”' if q else 'Shop all') }}</h1>
+    <p class="muted">{{ products|length }} item{{ '' if products|length == 1 else 's' }}</p>
+  </div>
+  <form class="sort-form" action="/shop" method="get">
+    {% if active_category %}<input type="hidden" name="category" value="{{ active_category }}">{% endif %}
+    {% if q %}<input type="hidden" name="q" value="{{ q }}">{% endif %}
+    <label for="sort">Sort</label>
+    <select name="sort" id="sort" onchange="this.form.submit()">
+      <option value="" {{ 'selected' if not sort else '' }}>Featured</option>
+      <option value="price_low" {{ 'selected' if sort == 'price_low' else '' }}>Price: Low to High</option>
+      <option value="price_high" {{ 'selected' if sort == 'price_high' else '' }}>Price: High to Low</option>
+      <option value="rating" {{ 'selected' if sort == 'rating' else '' }}>Top Rated</option>
+    </select>
+  </form>
+</section>
+
+<section class="wrap">
+  {% if products %}
+  <div class="product-grid">
+    {% for p in products %}{% include "_product_card.html" %}{% endfor %}
+  </div>
+  {% else %}
+  <div class="empty-state">
+    <h3>Nothing matches yet</h3>
+    <p>Try another search term, or browse the full catalog instead.</p>
+    <a href="/shop" class="btn btn-ink">View all products</a>
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

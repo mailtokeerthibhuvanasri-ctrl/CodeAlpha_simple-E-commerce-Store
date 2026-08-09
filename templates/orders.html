@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+{% block title %}My Orders — Norwick & Co.{% endblock %}
+{% block content %}
+<section class="wrap page-head">
+  <span class="eyebrow">Account</span>
+  <h1>My orders</h1>
+</section>
+
+<section class="wrap">
+  {% if not orders %}
+  <div class="empty-state">
+    <h3>No orders yet</h3>
+    <p>Once you place an order, it will show up here with its full history.</p>
+    <a href="/shop" class="btn btn-ink">Start shopping</a>
+  </div>
+  {% else %}
+  <div class="orders-table">
+    {% for o in orders %}
+    <a href="/orders/{{ o.id }}" class="order-row">
+      <div>
+        <span class="order-row-num">Order #{{ o.id }}</span>
+        <span class="muted">{{ o.created_at.strftime('%b %d, %Y') }} · {{ o.items|length }} item{{ '' if o.items|length == 1 else 's' }}</span>
+      </div>
+      <span class="status-chip">{{ o.status }}</span>
+      <span class="order-row-total">${{ "%.2f"|format(o.total) }}</span>
+      <span class="chevron">→</span>
+    </a>
+    {% endfor %}
+  </div>
+  {% endif %}
+</section>
+{% endblock %}

@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Order #{{ order.id }} — Norwick & Co.{% endblock %}
+{% block content %}
+<section class="wrap page-head order-confirm-head">
+  {% if success %}
+  <div class="success-badge" aria-hidden="true">
+    <svg viewBox="0 0 32 32" width="30" height="30"><circle cx="16" cy="16" r="15" fill="none" stroke="#1F6F54" stroke-width="1.6"/><path d="M9 16l5 5 9-10" fill="none" stroke="#1F6F54" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"/></svg>
+  </div>
+  <span class="eyebrow">Order confirmed</span>
+  <h1>Thank you, {{ order.full_name.split(' ')[0] }}.</h1>
+  <p class="muted">Your order has been placed and a confirmation has been recorded to your account.</p>
+  {% else %}
+  <span class="eyebrow">Order</span>
+  <h1>Order #{{ order.id }}</h1>
+  {% endif %}
+</section>
+
+<section class="wrap order-detail-layout">
+  <div>
+    <h3 class="section-sub">Items</h3>
+    {% for i in order.items %}
+    <div class="summary-line-item">
+      <span class="summary-line-name">{{ i.product_name }} <span class="muted">× {{ i.quantity }}</span></span>
+      <span>${{ "%.2f"|format(i.price * i.quantity) }}</span>
+    </div>
+    {% endfor %}
+  </div>
+
+  <aside class="order-summary">
+    <h3>Order details</h3>
+    <div class="summary-row"><span>Order number</span><span>#{{ order.id }}</span></div>
+    <div class="summary-row"><span>Placed on</span><span>{{ order.created_at.strftime('%b %d, %Y') }}</span></div>
+    <div class="summary-row"><span>Status</span><span class="status-chip">{{ order.status }}</span></div>
+    <div class="summary-row"><span>Paid with</span><span>{{ order.card_brand }} •••• {{ order.card_last4 }}</span></div>
+    <div class="summary-row"><span>Shipping to</span><span>{{ order.city }}, {{ order.postal_code }}</span></div>
+    <div class="summary-row summary-total"><span>Total</span><span>${{ "%.2f"|format(order.total) }}</span></div>
+    <a href="/orders" class="continue-link">← Back to all orders</a>
+  </aside>
+</section>
+{% endblock %}

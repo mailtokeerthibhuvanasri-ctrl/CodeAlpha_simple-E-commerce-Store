@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+{% block content %}
+
+<section class="hero wrap">
+  <div class="hero-copy">
+    <span class="eyebrow">The autumn catalog</span>
+    <h1>Goods worth<br>keeping for years.</h1>
+    <p>A small, considered selection across electronics, fashion, home and outdoors —
+       chosen for how well things are made, not how loudly they're marketed.</p>
+    <div class="hero-actions">
+      <a href="/shop" class="btn btn-ink">Browse the catalog</a>
+      <a href="#by-category" class="btn btn-line">Shop by category</a>
+    </div>
+  </div>
+  <div class="hero-badge" aria-hidden="true">
+    <svg viewBox="0 0 320 320">
+      <circle cx="160" cy="160" r="140" fill="#EFEAE0"/>
+      <circle cx="160" cy="160" r="120" fill="none" stroke="#C9BFA8" stroke-width="1.2"/>
+      <circle cx="160" cy="160" r="104" fill="none" stroke="#C9BFA8" stroke-width="1" stroke-dasharray="2 6"/>
+      <g stroke="#1F6F54" stroke-width="1.6" fill="none" stroke-linecap="round" stroke-linejoin="round" transform="translate(88 88)">
+        <path d="M18 6h12l2 8-4 6 6 10a6 6 0 0 1-6 12h-8a6 6 0 0 1-6-12l6-10-4-6z"/>
+      </g>
+    </svg>
+  </div>
+</section>
+
+{% if on_sale %}
+<section class="section wrap">
+  <div class="section-head">
+    <h2>Currently reduced</h2>
+    <a href="/shop" class="section-link">View all →</a>
+  </div>
+  <div class="product-grid">
+    {% for p in on_sale %}{% include "_product_card.html" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+
+<section class="section wrap">
+  <div class="section-head">
+    <h2>Most reached-for</h2>
+    <a href="/shop?sort=rating" class="section-link">View all →</a>
+  </div>
+  <div class="product-grid">
+    {% for p in featured %}{% include "_product_card.html" %}{% endfor %}
+  </div>
+</section>
+
+<section id="by-category" class="section wrap">
+  <div class="section-head">
+    <h2>Shop by category</h2>
+  </div>
+  {% for cat, items in by_category.items() %}
+  <div class="cat-block">
+    <div class="cat-block-head">
+      <h3>{{ cat }}</h3>
+      <a href="/shop?category={{ cat|urlencode }}" class="section-link">View {{ cat }} →</a>
+    </div>
+    <div class="product-grid">
+      {% for p in items %}{% include "_product_card.html" %}{% endfor %}
+    </div>
+  </div>
+  {% endfor %}
+</section>
+
+<section class="promise wrap">
+  <div class="promise-item">
+    <svg viewBox="0 0 32 32" width="26" height="26"><path d="M6 16l7 7L26 9" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></svg>
+    <div><h4>Considered sourcing</h4><p>Every item is chosen for material and construction, not trend cycles.</p></div>
+  </div>
+  <div class="promise-item">
+    <svg viewBox="0 0 32 32" width="26" height="26"><rect x="5" y="10" width="22" height="16" rx="2" fill="none" stroke="currentColor" stroke-width="1.8"/><path d="M5 14h22" stroke="currentColor" stroke-width="1.8"/></svg>
+    <div><h4>Secure checkout</h4><p>Encrypted, verified payment on every order — no exceptions.</p></div>
+  </div>
+  <div class="promise-item">
+    <svg viewBox="0 0 32 32" width="26" height="26"><path d="M4 10h16l6 6v10H4z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/><circle cx="10" cy="26" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/><circle cx="22" cy="26" r="2.4" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+    <div><h4>Free shipping over $75</h4><p>Flat, honest rates on everything under that — no surprise fees.</p></div>
+  </div>
+</section>
+
+{% endblock %}

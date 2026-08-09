@@ -1,0 +1,22 @@
+<article class="product-card">
+  <a href="/product/{{ p.slug }}" class="product-card-media accent-{{ p.accent }}">
+    {% if p.compare_price %}<span class="tag tag-sale">Sale</span>{% endif %}
+    <img src="/static/images/products/{{ p.slug }}.svg" alt="{{ p.name }}" loading="lazy">
+  </a>
+  <div class="product-card-body">
+    <span class="product-card-cat">{{ p.category }}</span>
+    <h3 class="product-card-name"><a href="/product/{{ p.slug }}">{{ p.name }}</a></h3>
+    <p class="product-card-tagline">{{ p.tagline }}</p>
+    <div class="product-card-foot">
+      <div class="price">
+        <span class="price-now">${{ "%.2f"|format(p.price) }}</span>
+        {% if p.compare_price %}<span class="price-was">${{ "%.2f"|format(p.compare_price) }}</span>{% endif %}
+      </div>
+      <form action="/cart/add" method="post">
+        <input type="hidden" name="product_id" value="{{ p.id }}">
+        <input type="hidden" name="next" value="{{ request.url.path }}">
+        <button type="submit" class="btn-add" aria-label="Add {{ p.name }} to cart">Add</button>
+      </form>
+    </div>
+  </div>
+</article>

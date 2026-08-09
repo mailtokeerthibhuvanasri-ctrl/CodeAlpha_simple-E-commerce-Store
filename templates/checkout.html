@@ -1,0 +1,79 @@
+{% extends "base.html" %}
+{% block title %}Checkout — Norwick & Co.{% endblock %}
+{% block content %}
+<section class="wrap page-head">
+  <span class="eyebrow">Step 2 of 2</span>
+  <h1>Checkout</h1>
+</section>
+
+<section class="wrap checkout-layout">
+  <form action="/checkout" method="post" class="checkout-form" autocomplete="off">
+    {% if error %}<p class="notice notice-error">{{ error }}</p>{% endif %}
+
+    <div class="form-block">
+      <h3><span class="step-num">1</span> Shipping address</h3>
+      <div class="field-row">
+        <label>Full name
+          <input type="text" name="full_name" required placeholder="Jordan Avery" value="{{ user.name if user else '' }}">
+        </label>
+      </div>
+      <div class="field-row">
+        <label>Street address
+          <input type="text" name="address" required placeholder="122 Birchwood Lane">
+        </label>
+      </div>
+      <div class="field-row two-col">
+        <label>City
+          <input type="text" name="city" required placeholder="Portland">
+        </label>
+        <label>Postal code
+          <input type="text" name="postal_code" required placeholder="97201">
+        </label>
+      </div>
+    </div>
+
+    <div class="form-block">
+      <h3><span class="step-num">2</span> Payment</h3>
+      <div class="card-brands" aria-hidden="true">
+        <span>VISA</span><span>MASTERCARD</span><span>AMEX</span>
+      </div>
+      <div class="field-row">
+        <label>Card number
+          <input type="text" name="card_number" id="card_number" required inputmode="numeric"
+                 placeholder="4242 4242 4242 4242" maxlength="19">
+        </label>
+      </div>
+      <div class="field-row two-col">
+        <label>Expiry (MM/YY)
+          <input type="text" name="card_expiry" id="card_expiry" required placeholder="09/29" maxlength="5">
+        </label>
+        <label>CVV
+          <input type="text" name="card_cvv" required inputmode="numeric" placeholder="123" maxlength="4">
+        </label>
+      </div>
+      <p class="secure-hint">
+        <svg viewBox="0 0 24 24" width="15" height="15"><rect x="4" y="10" width="16" height="10" rx="2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M7 10V7a5 5 0 0 1 10 0v3" fill="none" stroke="currentColor" stroke-width="1.6"/></svg>
+        Payments are encrypted and processed securely. This is a demo storefront — no real charge is made.
+      </p>
+    </div>
+
+    <button type="submit" class="btn btn-ink btn-wide btn-large">Place order — ${{ "%.2f"|format(total) }}</button>
+  </form>
+
+  <aside class="order-summary">
+    <h3>Order summary</h3>
+    {% for i in items %}
+    <div class="summary-line-item">
+      <span class="summary-line-name">{{ i.product.name }} <span class="muted">× {{ i.quantity }}</span></span>
+      <span>${{ "%.2f"|format(i.product.price * i.quantity) }}</span>
+    </div>
+    {% endfor %}
+    <div class="summary-row"><span>Subtotal</span><span>${{ "%.2f"|format(subtotal) }}</span></div>
+    <div class="summary-row"><span>Shipping</span><span>{{ 'Free' if shipping == 0 else '$%.2f'|format(shipping) }}</span></div>
+    <div class="summary-row"><span>Estimated tax</span><span>${{ "%.2f"|format(tax) }}</span></div>
+    <div class="summary-row summary-total"><span>Total</span><span>${{ "%.2f"|format(total) }}</span></div>
+  </aside>
+</section>
+
+<script src="/static/js/checkout.js"></script>
+{% endblock %}

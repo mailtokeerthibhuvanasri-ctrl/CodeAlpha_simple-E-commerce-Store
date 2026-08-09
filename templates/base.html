@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>{% block title %}Norwick & Co. — Considered goods for daily life{% endblock %}</title>
+<link rel="stylesheet" href="/static/css/style.css">
+<link rel="icon" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 32 32'><circle cx='16' cy='16' r='14' fill='none' stroke='%231F6F54' stroke-width='1.6'/><text x='16' y='21' font-family='Georgia,serif' font-size='15' text-anchor='middle' fill='%231F6F54'>N</text></svg>">
+</head>
+<body>
+<div class="skip-link"><a href="#main">Skip to content</a></div>
+
+<header class="site-header">
+  <div class="header-row wrap">
+    <a class="logo" href="/">
+      <span class="logo-mark" aria-hidden="true">N</span>
+      <span class="logo-text">Norwick <em>&amp; Co.</em></span>
+    </a>
+
+    <form class="search-form" action="/shop" method="get">
+      <input type="text" name="q" placeholder="Search the catalog…" value="{{ q or '' }}" aria-label="Search products">
+      <button type="submit" aria-label="Search">
+        <svg viewBox="0 0 20 20" width="17" height="17"><circle cx="9" cy="9" r="6.2" fill="none" stroke="currentColor" stroke-width="1.6"/><path d="M14 14l4.5 4.5" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"/></svg>
+      </button>
+    </form>
+
+    <nav class="header-actions">
+      {% if user %}
+        <a href="/orders" class="header-link">My Orders</a>
+        <span class="header-link muted">Hi, {{ user.name.split(' ')[0] }}</span>
+        <a href="/logout" class="header-link">Sign out</a>
+      {% else %}
+        <a href="/login" class="header-link">Sign in</a>
+        <a href="/register" class="btn btn-small btn-ink">Create account</a>
+      {% endif %}
+      <a href="/cart" class="cart-link" aria-label="Cart">
+        <svg viewBox="0 0 24 24" width="21" height="21"><path d="M4 6h2l2.2 11.2a2 2 0 0 0 2 1.6h7.6a2 2 0 0 0 2-1.6L21 9H7" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/><circle cx="10" cy="21" r="1.3" fill="currentColor"/><circle cx="18" cy="21" r="1.3" fill="currentColor"/></svg>
+        {% if cart_count and cart_count > 0 %}<span class="cart-count">{{ cart_count }}</span>{% endif %}
+      </a>
+    </nav>
+  </div>
+
+  <div class="category-row wrap">
+    <a href="/shop" class="cat-chip {{ 'active' if not active_category else '' }}">All</a>
+    {% for c in categories %}
+      <a href="/shop?category={{ c|urlencode }}" class="cat-chip {{ 'active' if active_category == c else '' }}">{{ c }}</a>
+    {% endfor %}
+  </div>
+</header>
+
+<main id="main">
+{% block content %}{% endblock %}
+</main>
+
+<footer class="site-footer">
+  <div class="wrap footer-grid">
+    <div class="footer-brand">
+      <span class="logo-mark" aria-hidden="true">N</span>
+      <p>Norwick &amp; Co. is a small catalog of considered goods — chosen for how they wear, work and age, not how they trend.</p>
+    </div>
+    <div>
+      <h4>Shop</h4>
+      <ul>
+        {% for c in categories %}<li><a href="/shop?category={{ c|urlencode }}">{{ c }}</a></li>{% endfor %}
+      </ul>
+    </div>
+    <div>
+      <h4>Account</h4>
+      <ul>
+        <li><a href="/orders">My orders</a></li>
+        <li><a href="/cart">Cart</a></li>
+        <li><a href="/register">Create account</a></li>
+      </ul>
+    </div>
+    <div>
+      <h4>Stay in touch</h4>
+      <form class="newsletter" onsubmit="event.preventDefault(); this.querySelector('button').textContent='Subscribed';">
+        <input type="email" placeholder="you@example.com" required>
+        <button type="submit">Join</button>
+      </form>
+    </div>
+  </div>
+  <div class="wrap footer-bottom">
+    <span>© {{ 2026 }} Norwick &amp; Co. All rights reserved.</span>
+    <span>A demonstration storefront — payments are simulated.</span>
+  </div>
+</footer>
+</body>
+</html>

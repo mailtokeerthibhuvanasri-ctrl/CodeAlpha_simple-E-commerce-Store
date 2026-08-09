@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}{{ product.name }} — Norwick & Co.{% endblock %}
+{% block content %}
+<section class="wrap breadcrumb">
+  <a href="/">Home</a> / <a href="/shop?category={{ product.category|urlencode }}">{{ product.category }}</a> / <span>{{ product.name }}</span>
+</section>
+
+<section class="wrap product-detail">
+  <div class="product-detail-media accent-{{ product.accent }}">
+    {% if product.compare_price %}<span class="tag tag-sale">Sale</span>{% endif %}
+    <img src="/static/images/products/{{ product.slug }}.svg" alt="{{ product.name }}">
+  </div>
+
+  <div class="product-detail-info">
+    <span class="eyebrow">{{ product.category }}</span>
+    <h1>{{ product.name }}</h1>
+    <p class="product-detail-tagline">{{ product.tagline }}</p>
+
+    <div class="rating-row">
+      <span class="stars" aria-hidden="true">
+        {% for i in range(5) %}{% if i < product.rating|round(0,'floor') %}★{% else %}☆{% endif %}{% endfor %}
+      </span>
+      <span class="muted">{{ product.rating }} · {{ product.reviews }} reviews</span>
+    </div>
+
+    <div class="price price-lg">
+      <span class="price-now">${{ "%.2f"|format(product.price) }}</span>
+      {% if product.compare_price %}<span class="price-was">${{ "%.2f"|format(product.compare_price) }}</span>{% endif %}
+    </div>
+
+    <p class="product-detail-desc">{{ product.description }}</p>
+
+    {% if added %}<p class="notice notice-success">Added to your cart.</p>{% endif %}
+
+    <form action="/cart/add" method="post" class="add-form">
+      <input type="hidden" name="product_id" value="{{ product.id }}">
+      <input type="hidden" name="next" value="/product/{{ product.slug }}?added=1">
+      <label for="qty" class="qty-label">Quantity</label>
+      <div class="qty-stepper">
+        <button type="button" onclick="var i=document.getElementById('qty'); i.value=Math.max(1,+i.value-1)">−</button>
+        <input type="number" id="qty" name="quantity" value="1" min="1" max="{{ product.stock }}">
+        <button type="button" onclick="var i=document.getElementById('qty'); i.value=+i.value+1">+</button>
+      </div>
+      <button type="submit" class="btn btn-ink btn-wide">Add to cart — ${{ "%.2f"|format(product.price) }}</button>
+    </form>
+
+    <ul class="detail-facts">
+      <li><strong>In stock</strong><span>{{ product.stock }} available</span></li>
+      <li><strong>Shipping</strong><span>Free over $75, flat $6.50 otherwise</span></li>
+      <li><strong>Returns</strong><span>30-day easy returns</span></li>
+    </ul>
+  </div>
+</section>
+
+{% if related %}
+<section class="section wrap">
+  <div class="section-head"><h2>You may also like</h2></div>
+  <div class="product-grid">
+    {% for p in related %}{% include "_product_card.html" %}{% endfor %}
+  </div>
+</section>
+{% endif %}
+{% endblock %}
